@@ -29,7 +29,8 @@ interface CatApiService {
         @Query("limit") limit: Int = 10,
         @Query("breed_ids") breedIds: String? = null,
         @Query("has_breeds") hasBreeds: Int? = null,
-        @Query("order") order: String = "RANDOM" // RANDOM, ASC, DESC
+        @Query("order") order: String = "RANDOM", // RANDOM, ASC, DESC
+        @Query("page") page: Int? = 0,
     ): List<ImageDto>
 
     // Get all cat breeds

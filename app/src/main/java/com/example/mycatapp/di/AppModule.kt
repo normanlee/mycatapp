@@ -1,9 +1,12 @@
 package com.example.mycatapp.di
 
 import com.example.mycatapp.data.CatApiService
+import com.example.mycatapp.data.repository.CatRepository
+import com.example.mycatapp.ui.FeedViewModel
+import org.koin.core.module.dsl.viewModel
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -39,7 +42,7 @@ val appModule = module {
     // 3. Provide the Retrofit client
     single {
         val json = get<Json>()
-        val contentType = MediaType.parse("application/json") ?: throw IllegalStateException("Invalid media type")
+        val contentType = "application/json".toMediaType()
         
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -51,5 +54,15 @@ val appModule = module {
     // 4. Provide the CatApiService interface implementation
     single {
         get<Retrofit>().create(CatApiService::class.java)
+    }
+
+    // 5. Provide the CatRepository
+    single {
+        CatRepository(apiService = get())
+    }
+
+    // 6. Provide the FeedViewModel
+    viewModel {
+        FeedViewModel(repository = get())
     }
 }
